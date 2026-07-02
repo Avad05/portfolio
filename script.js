@@ -261,7 +261,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       orbs.forEach((orb, i) => {
         const factor = (i + 1) * 0.5;
-        orb.style.transform = `translate(${offsetX * factor}px, ${offsetY * factor}px)`;
+        orb.style.setProperty('--tx', `${offsetX * factor}px`);
+        orb.style.setProperty('--ty', `${offsetY * factor}px`);
       });
 
       rafId = null;
@@ -402,12 +403,80 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!toggleBtn) return;
     
     toggleBtn.addEventListener('click', () => {
-      const currentTheme = document.documentElement.getAttribute('data-theme');
+      // Add a transition class to the body for a smooth global crossfade
+      document.body.classList.add('theme-transitioning');
+      
+      // Force browser to recalculate styles before changing the theme
+      // This ensures the transition actually happens instead of snapping instantly
+      void document.body.offsetHeight;
+      
+      const currentTheme = document.documentElement.getAttribute('data-theme') || 
+                           (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
       const newTheme = currentTheme === 'light' ? 'dark' : 'light';
       
-      document.documentElement.setAttribute('data-theme', newTheme);
-      localStorage.setItem('theme', newTheme);
+      requestAnimationFrame(() => {
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        
+        // Remove the class after the transition duration
+        setTimeout(() => {
+          document.body.classList.remove('theme-transitioning');
+        }, 900);
+      });
     });
+  };
+
+  // ──────────────────────────────────────────────
+  // 13. Typewriter Effect
+  // ──────────────────────────────────────────────
+  
+  const initTypewriter = () => {
+    const typewriterElement = document.getElementById('typewriter-text');
+    if (!typewriterElement) return;
+
+    const phrases = [
+      "that scales.",
+      "with precision.",
+      "from scratch.",
+      "for the future."
+    ];
+    
+    let phraseIndex = 0;
+    let charIndex = phrases[0].length; // Start with the first phrase fully typed
+    let isDeleting = false;
+    let typingSpeed = 100;
+    
+    const type = () => {
+      const currentPhrase = phrases[phraseIndex];
+      
+      if (isDeleting) {
+        typewriterElement.textContent = currentPhrase.substring(0, charIndex - 1);
+        charIndex--;
+        typingSpeed = 40; // Faster when deleting
+      } else {
+        typewriterElement.textContent = currentPhrase.substring(0, charIndex + 1);
+        charIndex++;
+        typingSpeed = Math.random() * 50 + 80; // Natural typing speed variation
+      }
+      
+      // If word is completely typed
+      if (!isDeleting && charIndex === currentPhrase.length) {
+        isDeleting = true;
+        typingSpeed = 1500; // Pause briefly at end of phrase
+      } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        phraseIndex = (phraseIndex + 1) % phrases.length;
+        typingSpeed = 200; // Short pause before typing new phrase
+      }
+      
+      setTimeout(type, typingSpeed);
+    };
+    
+    // Start the deleting effect after a moderate initial delay
+    setTimeout(() => {
+      isDeleting = true;
+      type();
+    }, 2000);
   };
 
   // ──────────────────────────────────────────────
@@ -422,4 +491,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initBackToTop();
   initCustomCursor();
   initThemeToggle();
+  initTypewriter();
 });
