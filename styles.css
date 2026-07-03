@@ -646,15 +646,118 @@ html {
 
 .hero {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   min-height: 75vh;
   min-height: 75dvh;
-  text-align: center;
   padding: 9.5rem var(--content-padding) var(--space-4);
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero__content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: var(--space-10);
+  width: 100%;
+}
+
+.hero__left {
+  text-align: left;
+}
+
+.hero__left .hero__actions {
+  justify-content: flex-start;
+}
+
+.hero__left .hero__subtitle {
+  margin-inline: 0;
+}
+
+.hero__visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Collapse hero to single column on mobile */
+@media (max-width: 767px) {
+  .hero__content {
+    grid-template-columns: 1fr;
+  }
+  .hero__left {
+    text-align: center;
+  }
+  .hero__left .hero__actions {
+    justify-content: center;
+  }
+  .hero__left .hero__subtitle {
+    margin-inline: auto;
+  }
+  .hero__visual {
+    display: none;
+  }
+}
+
+.hero-orb {
+  width: 100%;
+  max-width: 380px;
+  height: auto;
+  filter: drop-shadow(0 0 40px var(--accent-glow));
+}
+
+/* Orbit ring spin animations */
+.orbit-ring--1 {
+  transform-origin: 200px 200px;
+  animation: spin-cw 25s linear infinite;
+}
+
+.orbit-ring--2 {
+  transform-origin: 200px 200px;
+  animation: spin-ccw 18s linear infinite;
+}
+
+/* Outer orbit nodes — revolve around center at r=155 */
+.orbit-node--1 {
+  transform-origin: 200px 200px;
+  animation: spin-cw 25s linear infinite;
+}
+
+.orbit-node--2 {
+  transform-origin: 200px 200px;
+  animation: spin-cw 25s linear infinite;
+}
+
+.orbit-node--3 {
+  transform-origin: 200px 200px;
+  animation: spin-cw 25s linear infinite;
+}
+
+.orbit-node--4 {
+  transform-origin: 200px 200px;
+  animation: spin-cw 25s linear infinite;
+}
+
+/* Middle orbit nodes */
+.orbit-node--m1 {
+  transform-origin: 200px 200px;
+  animation: spin-ccw 18s linear infinite;
+}
+
+.orbit-node--m2 {
+  transform-origin: 200px 200px;
+  animation: spin-ccw 18s linear infinite;
+}
+
+@keyframes spin-cw {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes spin-ccw {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(-360deg); }
 }
 
 /* Subtle radial glow behind hero content */
