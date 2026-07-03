@@ -2611,6 +2611,7 @@ body.cursor-hover .custom-cursor-follower {
   background: rgba(255, 255, 255, 0.02);
   transition: all var(--duration-fast) var(--ease-out-expo);
   cursor: pointer;
+  text-decoration: none;
 }
 
 .tool-item:hover {
