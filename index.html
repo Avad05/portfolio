@@ -48,7 +48,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;700&family=Newsreader:opsz,wght@6..72,200;6..72,300;6..72,400;6..72,600&display=swap" rel="stylesheet">
 
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="styles.css?v=8">
+  <link rel="stylesheet" href="styles.css?v=9">
 
   <!-- Favicon (inline SVG) -->
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
@@ -662,31 +662,35 @@
     <div class="footer__inner container">
       <!-- Sitting Cat with Wagging Tail -->
       <svg class="footer-cat" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <!-- Tail (animated) -->
-        <g class="cat-tail">
-          <path d="M 68 112 C 85 110, 95 85, 90 60 C 88 50, 92 42, 88 35 C 84 28, 77 34, 80 44 C 82 52, 75 75, 62 82 Z" />
-        </g>
-        <!-- Cat Body -->
-        <g class="cat-body">
-          <!-- Paws / Back Legs -->
-          <ellipse cx="32" cy="115" rx="14" ry="7" class="cat-ear-shape" />
-          <ellipse cx="68" cy="115" rx="14" ry="7" class="cat-ear-shape" />
-          <!-- Main Body Curve -->
-          <path d="M 28 115 C 22 75, 30 55, 50 55 C 70 55, 78 75, 72 115 Z" class="cat-body-shape" />
-          <!-- White Chest/Tummy -->
-          <path d="M 40 70 C 40 55, 60 55, 60 70 C 60 92, 40 92, 40 70 Z" fill="#f8fafc" />
+        <g class="cat">
+          <!-- Tail -->
+          <path class="cat__tail" d="M67 105 C86 106 93 88 87 73 C83 63 89 56 94 60"/>
+          <!-- Body, chest and paws -->
+          <path class="cat__body" d="M30 110 C25 84 33 63 50 63 C67 63 75 84 70 110 Z"/>
+          <path class="cat__chest" d="M50 66 C59 69 61 83 50 91 C39 83 41 69 50 66 Z"/>
+          <ellipse class="cat__paw" cx="39" cy="109" rx="8.5" ry="5"/>
+          <ellipse class="cat__paw" cx="61" cy="109" rx="8.5" ry="5"/>
+          <!-- Ears (behind the head, so the head covers their base) -->
+          <path class="cat__ear cat__ear--l" d="M31 33 L26 9 L48 25 Z"/>
+          <path class="cat__ear cat__ear--r" d="M69 33 L74 9 L52 25 Z"/>
+          <path class="cat__ear-in" d="M33 30 L30 16 L42 26 Z"/>
+          <path class="cat__ear-in" d="M67 30 L70 16 L58 26 Z"/>
           <!-- Head -->
-          <ellipse cx="50" cy="42" rx="16" ry="14" class="cat-body-shape" />
-          <!-- Ears -->
-          <path d="M 36 34 L 32 15 L 43 28 Z" class="cat-ear-shape" />
-          <path d="M 64 34 L 68 15 L 57 28 Z" class="cat-ear-shape" />
-          <!-- Eyes (looking back/up) -->
-          <ellipse cx="44" cy="38" rx="2.5" ry="3.5" fill="#f6e05e" />
-          <ellipse cx="56" cy="38" rx="2.5" ry="3.5" fill="#f6e05e" />
-          <ellipse cx="45.5" cy="36.5" rx="1" ry="1.5" fill="#000" />
-          <ellipse cx="57.5" cy="36.5" rx="1" ry="1.5" fill="#000" />
-          <!-- Nose/Mouth -->
-          <polygon points="49.5,43 50.5,43 50,44.5" fill="#fda4af" />
+          <ellipse class="cat__head" cx="50" cy="45" rx="25" ry="22"/>
+          <ellipse class="cat__blush" cx="33" cy="50" rx="6" ry="3.6"/>
+          <ellipse class="cat__blush" cx="67" cy="50" rx="6" ry="3.6"/>
+          <!-- Happy ^ ^ eyes -->
+          <path class="cat__eye" d="M35 45 Q40 38 45 45"/>
+          <path class="cat__eye" d="M55 45 Q60 38 65 45"/>
+          <!-- Nose and a little w-shaped smile -->
+          <path class="cat__nose" d="M50 52 l-2.6 -2.4 h5.2 Z"/>
+          <path class="cat__mouth" d="M50 53 q-4 4.5 -7.5 1"/>
+          <path class="cat__mouth" d="M50 53 q4 4.5 7.5 1"/>
+          <!-- Whiskers -->
+          <path class="cat__whisker" d="M27 47 h-10"/>
+          <path class="cat__whisker" d="M27 52 l-9.5 3"/>
+          <path class="cat__whisker" d="M73 47 h10"/>
+          <path class="cat__whisker" d="M73 52 l9.5 3"/>
         </g>
       </svg>
       <p class="footer__copyright">

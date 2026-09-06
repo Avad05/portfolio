@@ -1347,10 +1347,72 @@ body.no-scroll { overflow: hidden; }
   gap: 1.5rem;
 }
 
-.footer-cat { width: 3.75rem; height: auto; }
-.cat-body-shape, .cat-ear-shape { fill: var(--ink); }
-.cat-tail path { fill: var(--ink); transform-origin: 66px 110px; animation: cat-wag 2.6s var(--ease-out) infinite; }
-.footer-cat:hover .cat-tail path { animation-duration: 0.9s; }
+.footer-cat { width: 5rem; height: auto; overflow: visible; }
+
+/* Silhouette parts take the ink colour, so the cat inverts with the theme. */
+.cat__body,
+.cat__head,
+.cat__ear,
+.cat__paw { fill: var(--ink); }
+
+/* The tail is stroked rather than filled, so the curl stays even. */
+.cat__tail {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 9;
+  stroke-linecap: round;
+}
+
+/* Outline the paws so they read as separate shapes against the body. */
+.cat__paw { stroke: var(--paper); stroke-width: 1.2; }
+
+.cat__chest { fill: var(--paper); }
+.cat__ear-in,
+.cat__nose { fill: var(--accent); }
+.cat__blush { fill: var(--accent); opacity: 0.6; }
+
+/* Face lines sit on the ink head, so they are drawn in paper. */
+.cat__eye,
+.cat__mouth {
+  fill: none;
+  stroke: var(--paper);
+  stroke-linecap: round;
+}
+
+.cat__eye { stroke-width: 2.8; }
+.cat__mouth { stroke-width: 1.8; }
+
+/* Whiskers fall outside the head, onto the page ground. */
+.cat__whisker {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  opacity: 0.45;
+}
+
+/* Breathing bob, wagging tail, occasional ear twitch. */
+.cat,
+.cat__tail,
+.cat__ear--l { transform-box: view-box; }
+
+.cat {
+  transform-origin: 50px 110px;
+  animation: cat-bob 3.2s ease-in-out infinite;
+}
+
+.cat__tail {
+  transform-origin: 67px 105px;
+  animation: cat-wag 2.6s ease-in-out infinite;
+}
+
+.cat__ear--l {
+  transform-origin: 40px 30px;
+  animation: cat-ear-twitch 5s ease-in-out infinite;
+}
+
+.footer-cat:hover .cat { animation-duration: 1s; }
+.footer-cat:hover .cat__tail { animation-duration: 0.7s; }
 
 .footer__copyright, .footer__built { color: var(--ink-45); }
 .footer__heart { color: var(--accent); }
@@ -1457,8 +1519,19 @@ body.no-scroll { overflow: hidden; }
 }
 
 @keyframes cat-wag {
-  0%, 100% { transform: rotate(0deg); }
-  50%      { transform: rotate(-14deg); }
+  0%, 100% { transform: rotate(-11deg); }
+  50%      { transform: rotate(11deg); }
+}
+
+@keyframes cat-bob {
+  0%, 100% { transform: translateY(0) scaleY(1); }
+  50%      { transform: translateY(-2px) scaleY(1.025); }
+}
+
+@keyframes cat-ear-twitch {
+  0%, 86%, 100% { transform: rotate(0deg); }
+  90%           { transform: rotate(-10deg); }
+  94%           { transform: rotate(5deg); }
 }
 
 
