@@ -45,28 +45,34 @@
   <!-- Preload Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;700&family=Newsreader:opsz,wght@6..72,200;6..72,300;6..72,400;6..72,600&display=swap" rel="stylesheet">
 
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="stylesheet" href="styles.css?v=4">
 
   <!-- Favicon (inline SVG) -->
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   
   <script>
     (function() {
       const savedTheme = localStorage.getItem('theme');
-      const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
-      if (savedTheme === 'light' || (!savedTheme && prefersLight)) {
-        document.documentElement.setAttribute('data-theme', 'light');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
       }
     })();
   </script>
 </head>
 <body>
 
-  <!-- Noise Texture Overlay -->
+  <!-- Grain Texture Overlay -->
   <div class="noise-overlay" aria-hidden="true"></div>
+
+  <!-- Hairline Viewport Frame -->
+  <div class="site-frame" aria-hidden="true"></div>
+
+  <!-- Scroll Progress Rail -->
+  <div class="scroll-rail" aria-hidden="true"><div class="scroll-rail__thumb"></div></div>
 
   <!-- Decorative Gradient Orbs -->
   <div class="gradient-orb gradient-orb--primary" aria-hidden="true"></div>
@@ -115,12 +121,20 @@
          ============================================ -->
     <section class="hero" id="hero">
       <div class="hero__content container">
-        <div class="hero__left">
-          <h1 class="hero__title">
-            <span class="hero__title-line reveal text-accent">Building infrastructure</span>
-            <span class="hero__title-line reveal"><span id="typewriter-text">that scales.</span><span class="typed-cursor"></span></span>
-          </h1>
-          <p class="hero__subtitle reveal">
+        <div class="hero__meta reveal">
+          <span>Avadhut <span class="dot">/</span> Backend &amp; AI Systems</span>
+          <span>Mumbai, India <span class="dot">&bull;</span> Open to work</span>
+          <span>Portfolio &mdash; MMXXVI</span>
+        </div>
+
+        <h1 class="hero__title">
+          <span class="hero__title-line reveal split text-accent">Building infrastructure</span>
+          <span class="hero__title-line reveal"><span id="typewriter-text">that scales.</span><span class="typed-cursor"></span></span>
+        </h1>
+
+        <div class="hero__lower">
+          <div class="hero__left">
+            <p class="hero__subtitle reveal">
             <span class="text-accent">Backend Engineer</span> & <span class="text-accent">AI Systems Builder</span>.
           </p>
           <div class="hero__actions reveal">
@@ -144,8 +158,8 @@
             </a>
           </div>
         </div>
-        <!-- Hero Visual -->
-        <div class="hero__visual reveal">
+          <!-- Hero Visual -->
+          <div class="hero__visual reveal">
           <svg class="hero-orb" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
             <!-- Outer dashed orbit ring -->
             <circle cx="200" cy="200" r="155" stroke="var(--accent-primary)" stroke-width="0.6" stroke-dasharray="4 6" opacity="0.3" class="orbit-ring orbit-ring--1"/>
@@ -193,9 +207,33 @@
             <line x1="200" y1="200" x2="200" y2="59" stroke="var(--accent-primary)" stroke-width="0.4" opacity="0.15" stroke-dasharray="2 4"/>
             <line x1="200" y1="200" x2="200" y2="341" stroke="var(--accent-primary)" stroke-width="0.4" opacity="0.15" stroke-dasharray="2 4"/>
           </svg>
+          </div>
         </div>
       </div>
     </section>
+
+
+    <!-- ============================================
+         MARQUEE
+         ============================================ -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <span class="marquee__item">Distributed Systems</span>
+        <span class="marquee__item">Multi-Agent AI</span>
+        <span class="marquee__item">Vector RAG</span>
+        <span class="marquee__item">Postgres</span>
+        <span class="marquee__item">Docker</span>
+        <span class="marquee__item">Queues &amp; Workers</span>
+      </div>
+      <div class="marquee__track">
+        <span class="marquee__item">Distributed Systems</span>
+        <span class="marquee__item">Multi-Agent AI</span>
+        <span class="marquee__item">Vector RAG</span>
+        <span class="marquee__item">Postgres</span>
+        <span class="marquee__item">Docker</span>
+        <span class="marquee__item">Queues &amp; Workers</span>
+      </div>
+    </div>
 
     <!-- ============================================
          ABOUT — BENTO GRID
@@ -204,7 +242,7 @@
       <div class="container">
         <div class="section__header reveal">
           <span class="section__label">About Me</span>
-          <h2 class="section__title">At a glance</h2>
+          <h2 class="section__title split">At a glance</h2>
         </div>
 
         <div class="bento stagger">
@@ -366,7 +404,7 @@
       <div class="container">
         <div class="section__header reveal">
           <span class="section__label">Selected Work</span>
-          <h2 class="section__title">Projects I've built</h2>
+          <h2 class="section__title split">Projects I've built</h2>
           <p class="section__subtitle">A collection of projects that showcase my skills in full-stack development, UI design, and problem solving.</p>
         </div>
 
@@ -537,7 +575,7 @@
       <div class="container">
         <div class="section__header reveal">
           <span class="section__label">Experience</span>
-          <h2 class="section__title">Where I've worked</h2>
+          <h2 class="section__title split">Where I've worked</h2>
         </div>
 
         <div class="timeline stagger">
@@ -576,6 +614,29 @@
       </div>
     </section>
 
+
+    <!-- ============================================
+         MARQUEE
+         ============================================ -->
+    <div class="marquee marquee--alt" aria-hidden="true">
+      <div class="marquee__track">
+        <span class="marquee__item">Available for Work</span>
+        <span class="marquee__item">Let’s Build Something</span>
+        <span class="marquee__item">Say Hello</span>
+        <span class="marquee__item">Available for Work</span>
+        <span class="marquee__item">Let’s Build Something</span>
+        <span class="marquee__item">Say Hello</span>
+      </div>
+      <div class="marquee__track">
+        <span class="marquee__item">Available for Work</span>
+        <span class="marquee__item">Let’s Build Something</span>
+        <span class="marquee__item">Say Hello</span>
+        <span class="marquee__item">Available for Work</span>
+        <span class="marquee__item">Let’s Build Something</span>
+        <span class="marquee__item">Say Hello</span>
+      </div>
+    </div>
+
     <!-- ============================================
          CONTACT
          ============================================ -->
@@ -583,7 +644,7 @@
       <div class="container">
         <div class="contact reveal">
           <span class="section__label">Get in Touch</span>
-          <h2 class="contact__title">Let's work<br><span class="text-gradient">together.</span></h2>
+          <h2 class="contact__title split">Let's work<br><span class="text-gradient">together.</span></h2>
           <p class="contact__text">
             I'm always open to new opportunities, collaborations, and interesting projects.
             Whether you have a question or just want to say hi — my inbox is always open.
@@ -672,11 +733,7 @@
     </div>
   </footer>
 
-  <!-- JavaScript -->
-  <!-- Custom Cursor -->
-  <div class="custom-cursor"></div>
-  <div class="custom-cursor-follower"></div>
   <!-- Scripts -->
-  <script src="script.js?v=2"></script>
+  <script src="script.js?v=3"></script>
 </body>
 </html>

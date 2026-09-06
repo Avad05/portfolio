@@ -30,6 +30,18 @@ document.addEventListener('DOMContentLoaded', () => {
     );
 
     revealEls.forEach((el) => observer.observe(el));
+
+    // Safety net: content must never be left invisible if the observer never
+    // fires for an element (bfcache restores, zero-height layout, odd engines).
+    window.setTimeout(() => {
+      revealEls.forEach((el) => {
+        if (el.classList.contains('visible')) return;
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+          el.classList.add('visible');
+        }
+      });
+    }, 3000);
   };
 
   // ──────────────────────────────────────────────
@@ -326,61 +338,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ──────────────────────────────────────────────
-  // 10. Custom Cursor
-  // ──────────────────────────────────────────────
-
-  const initCustomCursor = () => {
-    if (prefersReducedMotion || window.innerWidth <= 768) return;
-
-    const cursor = document.querySelector('.custom-cursor');
-    const follower = document.querySelector('.custom-cursor-follower');
-    if (!cursor || !follower) return;
-
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-    let cursorX = mouseX;
-    let cursorY = mouseY;
-    let followerX = mouseX;
-    let followerY = mouseY;
-    
-    // Lerp values for smooth trailing
-    const cursorSpeed = 0.5;
-    const followerSpeed = 0.35;
-
-    let rafId = null;
-
-    const updateCursor = () => {
-      // Calculate cursor position (fast)
-      cursorX += (mouseX - cursorX) * cursorSpeed;
-      cursorY += (mouseY - cursorY) * cursorSpeed;
-      
-      // Calculate follower position (slow)
-      followerX += (mouseX - followerX) * followerSpeed;
-      followerY += (mouseY - followerY) * followerSpeed;
-
-      cursor.style.transform = `translate(calc(${cursorX}px - 50%), calc(${cursorY}px - 50%))`;
-      follower.style.transform = `translate(calc(${followerX}px - 50%), calc(${followerY}px - 50%))`;
-
-      rafId = requestAnimationFrame(updateCursor);
-    };
-
-    window.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      if (!rafId) {
-        rafId = requestAnimationFrame(updateCursor);
-      }
-    }, { passive: true });
-
-    // Interactive hover state
-    const interactables = document.querySelectorAll('a, button, input, textarea, .project__image-wrapper');
-    interactables.forEach(el => {
-      el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
-      el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
-    });
-  };
-
-  // ──────────────────────────────────────────────
   // 11. Staggered Text Reveal
   // ──────────────────────────────────────────────
 
@@ -410,9 +367,9 @@ document.addEventListener('DOMContentLoaded', () => {
       // This ensures the transition actually happens instead of snapping instantly
       void document.body.offsetHeight;
       
-      const currentTheme = document.documentElement.getAttribute('data-theme') || 
-                           (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      const currentTheme = document.documentElement.getAttribute('data-theme') ||
+                           (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
       
       requestAnimationFrame(() => {
         document.documentElement.setAttribute('data-theme', newTheme);
@@ -480,16 +437,138 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // ──────────────────────────────────────────────
+  // 10. Split-Text Reveal
+  // ──────────────────────────────────────────────
+
+  /**
+   * Wraps every glyph of a `.split` element in its own span so the scroll
+   * reveal can stagger them. Walks text nodes only, so nested markup
+   * (`<br>`, `<span class="text-gradient">`) survives intact.
+   */
+  const initSplitText = () => {
+    const targets = document.querySelectorAll('.split');
+    if (!targets.length || prefersReducedMotion) return;
+
+    targets.forEach((el) => {
+      if (el.dataset.split === 'done') return;
+
+      const textNodes = [];
+      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      while (walker.nextNode()) textNodes.push(walker.currentNode);
+
+      let index = 0;
+
+      textNodes.forEach((node) => {
+        if (!node.nodeValue.trim()) return;
+
+        const frag = document.createDocumentFragment();
+
+        // Group glyphs into inline-block words so long headings still wrap
+        // between words rather than mid-word.
+        node.nodeValue.split(/(\s+)/).forEach((chunk) => {
+          if (!chunk) return;
+
+          if (/^\s+$/.test(chunk)) {
+            frag.appendChild(document.createTextNode(' '));
+            return;
+          }
+
+          const word = document.createElement('span');
+          word.className = 'word';
+
+          [...chunk].forEach((glyph) => {
+            const span = document.createElement('span');
+            span.className = 'char';
+            span.textContent = glyph;
+            span.style.setProperty('--char-delay', `${index * 22}ms`);
+            word.appendChild(span);
+            index += 1;
+          });
+
+          frag.appendChild(word);
+        });
+
+        node.parentNode.replaceChild(frag, node);
+      });
+
+      el.dataset.split = 'done';
+    });
+  };
+
+  // ──────────────────────────────────────────────
+  // 11. Scroll Progress Rail
+  // ──────────────────────────────────────────────
+
+  /** Scales the right-edge rail to match how far the page has been read. */
+  const initScrollRail = () => {
+    const thumb = document.querySelector('.scroll-rail__thumb');
+    if (!thumb) return;
+
+    let railTicking = false;
+
+    const update = () => {
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = scrollable > 0 ? window.scrollY / scrollable : 0;
+      thumb.style.setProperty('--progress', Math.min(1, Math.max(0, progress)).toFixed(4));
+      railTicking = false;
+    };
+
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (!railTicking) {
+          requestAnimationFrame(update);
+          railTicking = true;
+        }
+      },
+      { passive: true }
+    );
+
+    update();
+  };
+
+  // ──────────────────────────────────────────────
+  // 12. Magnetic Hover
+  // ──────────────────────────────────────────────
+
+  /** Pulls buttons and social chips slightly toward the pointer. */
+  const initMagnetic = () => {
+    if (prefersReducedMotion || window.matchMedia('(pointer: coarse)').matches) return;
+
+    const targets = document.querySelectorAll('.btn, .social-link, .resume-badge, .back-to-top');
+    const STRENGTH = 0.28;
+
+    targets.forEach((el) => {
+      el.classList.add('magnetic');
+
+      el.addEventListener('mousemove', (e) => {
+        const rect = el.getBoundingClientRect();
+        const dx = e.clientX - (rect.left + rect.width / 2);
+        const dy = e.clientY - (rect.top + rect.height / 2);
+        el.style.setProperty('--mx', `${dx * STRENGTH}px`);
+        el.style.setProperty('--my', `${dy * STRENGTH}px`);
+      });
+
+      el.addEventListener('mouseleave', () => {
+        el.style.setProperty('--mx', '0px');
+        el.style.setProperty('--my', '0px');
+      });
+    });
+  };
+
+  // ──────────────────────────────────────────────
   // Initialise all modules
   // ──────────────────────────────────────────────
 
+  initSplitText();
   initScrollReveal();
+  initScrollRail();
+  initMagnetic();
   initSmoothScroll();
   initActiveNavLink();
   initStaggeredReveal();
   initParallaxOrbs();
   initBackToTop();
-  initCustomCursor();
   initThemeToggle();
   initTypewriter();
 });
