@@ -494,7 +494,14 @@ body.no-scroll { overflow: hidden; }
   overflow: hidden;
 }
 
-.hero__title-line:last-child { color: var(--accent); }
+/* The typed line empties between phrases. Without a reserved line box it
+   collapses to zero height and everything below it jumps up, so hold one
+   line's worth of space at all times. */
+.hero__title-line:last-child {
+  color: var(--accent);
+  min-height: 0.82em; /* one line box at the title's line-height */
+  min-height: 1lh;    /* exact, where the unit is supported */
+}
 .hero__title-line.text-accent { color: var(--ink); }
 
 #typewriter-text { text-transform: uppercase; }
@@ -508,7 +515,7 @@ body.no-scroll { overflow: hidden; }
 /* The lower deck: lead paragraph + actions on the left, plate on the right. */
 .hero__lower {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 16rem);
+  grid-template-columns: minmax(0, 30rem) minmax(0, 1fr) minmax(0, 16rem);
   align-items: end;
   gap: clamp(1.5rem, 4vw, 4rem);
   padding-top: clamp(1.5rem, 3vw, 2.5rem);
@@ -529,6 +536,68 @@ body.no-scroll { overflow: hidden; }
   flex-wrap: wrap;
   align-items: center;
   gap: 0.75rem;
+}
+
+/* ── Spec panel ──────────────────────────────────────────────────────────
+   A short technical register that occupies the deck between the copy and
+   the plate, in the same mono/hairline language as the rest of the page.  */
+
+.hero__specs {
+  align-self: end;
+  margin: 0;
+  border-top: var(--frame) solid var(--ink);
+}
+
+.spec {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0.25rem 1.25rem;
+  padding: 0.75rem 0;
+  border-bottom: var(--frame) solid var(--rule);
+  transition: padding-left 0.5s var(--ease-quint);
+}
+
+.spec:hover { padding-left: 0.5rem; }
+
+.spec__key {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.spec__val {
+  margin: 0;
+  color: var(--ink-70);
+  font-family: var(--font-editorial);
+  font-size: 1.0625rem;
+  line-height: 1.2;
+}
+
+.spec__val--live {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--ink);
+}
+
+/* Pulsing availability dot. */
+.spec__pulse {
+  position: relative;
+  flex-shrink: 0;
+  width: 0.4rem;
+  height: 0.4rem;
+  background: var(--accent);
+}
+
+.spec__pulse::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  animation: spec-pulse 2s var(--ease-out) infinite;
 }
 
 .hero__visual {
@@ -1377,6 +1446,11 @@ body.no-scroll { overflow: hidden; }
   to   { transform: translate3d(-100%, 0, 0); }
 }
 
+@keyframes spec-pulse {
+  0%   { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(3.2); opacity: 0; }
+}
+
 @keyframes lattice-scan {
   0%   { transform: translateY(-110%); }
   100% { transform: translateY(310%); }
@@ -1412,6 +1486,7 @@ body.no-scroll { overflow: hidden; }
 @media (max-width: 1024px) {
   .hero__lower { grid-template-columns: minmax(0, 1fr); }
   .hero__visual { max-width: 20rem; }
+  .hero__specs { max-width: 22rem; }
 
   .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .bento__card--wide,
