@@ -499,19 +499,6 @@ body.no-scroll { overflow: hidden; }
 
 #typewriter-text { text-transform: uppercase; }
 
-/* Typed caret — a solid crimson block, blinking. */
-.typed-cursor {
-  display: inline-block;
-  width: 0.07em;
-  height: 0.68em;
-  margin-left: 0.1em;
-  background: var(--accent);
-  vertical-align: baseline;
-  opacity: 1;
-}
-
-.typed-cursor.blink { opacity: 0; }
-
 .hero__left {
   display: flex;
   flex-direction: column;
@@ -547,6 +534,7 @@ body.no-scroll { overflow: hidden; }
 .hero__visual {
   position: relative;
   align-self: end;
+  overflow: hidden;
   width: 100%;
   max-width: 16rem;
   margin-left: auto;
@@ -554,29 +542,57 @@ body.no-scroll { overflow: hidden; }
   background: var(--paper);
 }
 
-.hero-orb {
-  width: 100%;
-  height: auto;
-  padding: 1rem;
+/* ── Data lattice ────────────────────────────────────────────────────────
+   A grid of mono glyphs that flip at random, with cells igniting crimson as
+   "packets" pass through. Cells are built by script.js.                    */
+
+.lattice {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  padding: 0.9rem 0.9rem 1.9rem;
+  color: var(--ink-45);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  line-height: 1;
+  user-select: none;
 }
 
-/* Counter-rotating orbit rings + nodes. */
-/* CSS wins over the SVG's presentation attributes, so the rings stay legible
-   against the paper ground. */
-.orbit-ring { opacity: 0.5; }
-.orbit-node { opacity: 0.9; }
+.lattice__cell {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  transition: color 0.6s var(--ease-out), background-color 0.6s var(--ease-out);
+}
 
-.orbit-ring,
-.orbit-node { transform-origin: 200px 200px; }
+.lattice__cell.is-hot {
+  background: var(--accent);
+  color: var(--paper);
+  transition-duration: 0.06s;
+}
 
-.orbit-ring--1 { animation: orbit-spin 46s linear infinite; }
-.orbit-ring--2 { animation: orbit-spin 34s linear infinite reverse; }
-.orbit-node--1 { animation: orbit-spin 46s linear infinite; }
-.orbit-node--2 { animation: orbit-spin 46s linear infinite; animation-delay: -11.5s; }
-.orbit-node--3 { animation: orbit-spin 46s linear infinite; animation-delay: -23s; }
-.orbit-node--4 { animation: orbit-spin 46s linear infinite; animation-delay: -34.5s; }
-.orbit-node--m1 { animation: orbit-spin 34s linear infinite reverse; }
-.orbit-node--m2 { animation: orbit-spin 34s linear infinite reverse; animation-delay: -17s; }
+.lattice__caption {
+  position: absolute;
+  right: 0.7rem;
+  bottom: 0.55rem;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.18em;
+}
+
+/* Crimson sweep travelling down the plate. */
+.hero__visual::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  background: linear-gradient(180deg, transparent, var(--accent-glow), transparent);
+  opacity: 0.18;
+  animation: lattice-scan 5s var(--ease-out) infinite;
+  pointer-events: none;
+}
 
 /* Resume chit — flips to crimson on hover. */
 .resume-badge {
@@ -996,10 +1012,9 @@ body.no-scroll { overflow: hidden; }
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  filter: grayscale(1) contrast(1.05);
-  transform: scale(1.01);
-  transition: transform 1.2s var(--ease-quint), filter 0.7s var(--ease-out);
+  padding: clamp(1rem, 2vw, 2rem);
+  object-fit: contain;
+  transition: transform 1.2s var(--ease-quint);
 }
 
 /* Crimson veil wipes across the plate as the row is entered. */
@@ -1014,7 +1029,7 @@ body.no-scroll { overflow: hidden; }
   pointer-events: none;
 }
 
-.project:hover .project__image { transform: scale(1.06); filter: grayscale(0) contrast(1); }
+.project:hover .project__image { transform: scale(1.03); }
 .project:hover .project__image-wrapper::after { clip-path: inset(0 100% 0 0); }
 
 .project__content {
@@ -1362,9 +1377,9 @@ body.no-scroll { overflow: hidden; }
   to   { transform: translate3d(-100%, 0, 0); }
 }
 
-@keyframes orbit-spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+@keyframes lattice-scan {
+  0%   { transform: translateY(-110%); }
+  100% { transform: translateY(310%); }
 }
 
 @keyframes cat-wag {

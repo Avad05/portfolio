@@ -48,7 +48,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;700&family=Newsreader:opsz,wght@6..72,200;6..72,300;6..72,400;6..72,600&display=swap" rel="stylesheet">
 
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="styles.css?v=4">
+  <link rel="stylesheet" href="styles.css?v=6">
 
   <!-- Favicon (inline SVG) -->
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
@@ -129,7 +129,7 @@
 
         <h1 class="hero__title">
           <span class="hero__title-line reveal split text-accent">Building infrastructure</span>
-          <span class="hero__title-line reveal"><span id="typewriter-text">that scales.</span><span class="typed-cursor"></span></span>
+          <span class="hero__title-line reveal"><span id="typewriter-text">that scales.</span></span>
         </h1>
 
         <div class="hero__lower">
@@ -151,62 +151,17 @@
               </svg>
               GitHub
             </a>
-            <a href="assets/Resume2.pdf" target="_blank" class="resume-badge" title="Download Resume">
+            <a href="assets/Avadhut_Kaskar_Resume-2_bh.pdf" target="_blank" class="resume-badge" title="Download Resume">
               <div class="resume-badge__inner">
                 <span class="resume-badge__text">Grab Resume &rarr;</span>
               </div>
             </a>
           </div>
         </div>
-          <!-- Hero Visual -->
-          <div class="hero__visual reveal">
-          <svg class="hero-orb" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <!-- Outer dashed orbit ring -->
-            <circle cx="200" cy="200" r="155" stroke="var(--accent-primary)" stroke-width="0.6" stroke-dasharray="4 6" opacity="0.3" class="orbit-ring orbit-ring--1"/>
-            <!-- Middle orbit ring -->
-            <circle cx="200" cy="200" r="105" stroke="var(--accent-primary)" stroke-width="0.6" stroke-dasharray="3 8" opacity="0.2" class="orbit-ring orbit-ring--2"/>
-            <!-- Inner glow core -->
-            <circle cx="200" cy="200" r="48" fill="var(--accent-glow)" opacity="0.15"/>
-            <circle cx="200" cy="200" r="32" fill="var(--accent-glow)" opacity="0.2"/>
-            <circle cx="200" cy="200" r="18" fill="var(--accent-primary)" opacity="0.6"/>
-            <!-- Center icon: brackets </> -->
-            <text x="200" y="207" text-anchor="middle" font-family="monospace" font-size="14" font-weight="bold" fill="var(--accent-primary)">&lt;/&gt;</text>
-            <!-- Orbiting node 1 (outer) -->
-            <g class="orbit-node orbit-node--1">
-              <circle cx="355" cy="200" r="14" fill="var(--bg-secondary)" stroke="var(--accent-primary)" stroke-width="1.2"/>
-              <text x="355" y="204" text-anchor="middle" font-family="monospace" font-size="8" fill="var(--accent-primary)">DB</text>
-            </g>
-            <!-- Orbiting node 2 (outer) -->
-            <g class="orbit-node orbit-node--2">
-              <circle cx="45" cy="200" r="14" fill="var(--bg-secondary)" stroke="var(--accent-primary)" stroke-width="1.2"/>
-              <text x="45" y="204" text-anchor="middle" font-family="monospace" font-size="7" fill="var(--accent-primary)">API</text>
-            </g>
-            <!-- Orbiting node 3 (outer) -->
-            <g class="orbit-node orbit-node--3">
-              <circle cx="200" cy="45" r="14" fill="var(--bg-secondary)" stroke="var(--accent-primary)" stroke-width="1.2"/>
-              <text x="200" y="49" text-anchor="middle" font-family="monospace" font-size="7" fill="var(--accent-primary)">AI</text>
-            </g>
-            <!-- Orbiting node 4 (outer) -->
-            <g class="orbit-node orbit-node--4">
-              <circle cx="200" cy="355" r="14" fill="var(--bg-secondary)" stroke="var(--accent-primary)" stroke-width="1.2"/>
-              <text x="200" y="359" text-anchor="middle" font-family="monospace" font-size="7" fill="var(--accent-primary)">MQ</text>
-            </g>
-            <!-- Middle orbit node 1 -->
-            <g class="orbit-node orbit-node--m1">
-              <circle cx="305" cy="200" r="10" fill="var(--bg-tertiary)" stroke="var(--accent-primary)" stroke-width="0.8" opacity="0.7"/>
-              <text x="305" y="204" text-anchor="middle" font-family="monospace" font-size="6" fill="var(--accent-primary)">PG</text>
-            </g>
-            <!-- Middle orbit node 2 -->
-            <g class="orbit-node orbit-node--m2">
-              <circle cx="95" cy="200" r="10" fill="var(--bg-tertiary)" stroke="var(--accent-primary)" stroke-width="0.8" opacity="0.7"/>
-              <text x="95" y="204" text-anchor="middle" font-family="monospace" font-size="5" fill="var(--accent-primary)">RAG</text>
-            </g>
-            <!-- Connecting lines from center -->
-            <line x1="200" y1="200" x2="341" y2="200" stroke="var(--accent-primary)" stroke-width="0.4" opacity="0.15" stroke-dasharray="2 4"/>
-            <line x1="200" y1="200" x2="59" y2="200" stroke="var(--accent-primary)" stroke-width="0.4" opacity="0.15" stroke-dasharray="2 4"/>
-            <line x1="200" y1="200" x2="200" y2="59" stroke="var(--accent-primary)" stroke-width="0.4" opacity="0.15" stroke-dasharray="2 4"/>
-            <line x1="200" y1="200" x2="200" y2="341" stroke="var(--accent-primary)" stroke-width="0.4" opacity="0.15" stroke-dasharray="2 4"/>
-          </svg>
+          <!-- Hero Visual — live data lattice, built by script.js -->
+          <div class="hero__visual reveal" aria-hidden="true">
+            <div class="lattice" id="lattice"></div>
+            <span class="lattice__caption">SYS &bull; STREAMING</span>
           </div>
         </div>
       </div>
@@ -734,6 +689,6 @@
   </footer>
 
   <!-- Scripts -->
-  <script src="script.js?v=3"></script>
+  <script src="script.js?v=4"></script>
 </body>
 </html>

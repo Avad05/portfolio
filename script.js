@@ -191,7 +191,6 @@ document.addEventListener('DOMContentLoaded', () => {
   /** Cycles through an array of strings with a typewriter effect. */
   const initTypedText = () => {
     const el = document.querySelector('.typed-text');
-    const cursor = document.querySelector('.typed-cursor');
     if (!el) return;
 
     if (prefersReducedMotion) {
@@ -246,10 +245,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Start after a brief initial pause
     setTimeout(tick, 500);
 
-    // Blinking cursor animation via class toggle
-    if (cursor) {
-      setInterval(() => cursor.classList.toggle('blink'), 530);
-    }
   };
 
   // ──────────────────────────────────────────────
@@ -557,6 +552,91 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // ──────────────────────────────────────────────
+  // 13. Hero Data Lattice
+  // ──────────────────────────────────────────────
+
+  /**
+   * Fills the hero plate with a grid of mono glyphs that flip at random, and
+   * sends "packets" sweeping through a row or column, igniting cells as they
+   * pass. Ticks only while the plate is actually on screen.
+   */
+  const initDataLattice = () => {
+    const grid = document.getElementById('lattice');
+    if (!grid) return;
+
+    const COLS = 12;
+    const ROWS = 12;
+    const GLYPHS = ['0', '1'];
+    const cells = [];
+
+    const frag = document.createDocumentFragment();
+    for (let i = 0; i < COLS * ROWS; i += 1) {
+      const cell = document.createElement('span');
+      cell.className = 'lattice__cell';
+      cell.textContent = GLYPHS[Math.random() < 0.5 ? 0 : 1];
+      frag.appendChild(cell);
+      cells.push(cell);
+    }
+    grid.appendChild(frag);
+
+    if (prefersReducedMotion) return;
+
+    const flip = (cell) => {
+      cell.textContent = cell.textContent === '0' ? '1' : '0';
+    };
+
+    /** Runs a packet along one row or column, lighting each cell in turn. */
+    const sendPacket = () => {
+      const vertical = Math.random() < 0.5;
+      const track = Math.floor(Math.random() * (vertical ? COLS : ROWS));
+
+      for (let step = 0; step < (vertical ? ROWS : COLS); step += 1) {
+        const index = vertical ? step * COLS + track : track * COLS + step;
+        const cell = cells[index];
+        if (!cell) continue;
+
+        window.setTimeout(() => {
+          flip(cell);
+          cell.classList.add('is-hot');
+          window.setTimeout(() => cell.classList.remove('is-hot'), 260);
+        }, step * 45);
+      }
+    };
+
+    let ambientId = null;
+    let packetId = null;
+
+    const start = () => {
+      if (ambientId) return;
+      // Ambient churn: a few glyphs flip on every tick.
+      ambientId = window.setInterval(() => {
+        for (let i = 0; i < 5; i += 1) {
+          flip(cells[Math.floor(Math.random() * cells.length)]);
+        }
+      }, 140);
+      packetId = window.setInterval(sendPacket, 1600);
+      sendPacket();
+    };
+
+    const stop = () => {
+      window.clearInterval(ambientId);
+      window.clearInterval(packetId);
+      ambientId = null;
+      packetId = null;
+    };
+
+    // Idle whenever the plate is scrolled away or the tab is backgrounded.
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => (entry.isIntersecting ? start() : stop()));
+    });
+    observer.observe(grid);
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stop();
+    });
+  };
+
+  // ──────────────────────────────────────────────
   // Initialise all modules
   // ──────────────────────────────────────────────
 
@@ -564,6 +644,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollReveal();
   initScrollRail();
   initMagnetic();
+  initDataLattice();
   initSmoothScroll();
   initActiveNavLink();
   initStaggeredReveal();
